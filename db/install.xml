@@ -9,7 +9,8 @@
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="assignment" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="submission" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="zoommeeting" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="The Zoom Meeting."/>
+        <FIELD NAME="meetinguuid" TYPE="string" LENGTH="36" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="The Zoom Meeting UUID."/>
+        <FIELD NAME="recordingfileid" TYPE="string" LENGTH="36" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Recording File ID."/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="The unique id for this submission info."/>
@@ -19,3 +20,4 @@
     </TABLE>
   </TABLES>
 </XMLDB>
+edbc8e90-41e0-465f-8af3-54102144e09b 
