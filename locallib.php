@@ -23,6 +23,7 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+require_once($CFG->libdir.'/eventslib.php');
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -165,32 +166,41 @@ class assign_submission_ncmzoom extends assign_submission_plugin {
 
         $mform->addElement('html', "<p class='lead'>Select the Zoom Recording you want to submit</p>");
 
-        foreach($result->meetings as $meeting) {
-            var_dump($meeting);
-            $mform->addElement('html', $this->get_html_meeting($meeting));
+        if (empty($result->meetings)) {
+            $mform->addElement('html', '<div class="alert alert-warning" role="alert">No meeting found.</div>');
+        } else {
+
+        // $radioarray=array(); 
+            // Loop on each meeting
+            foreach($result->meetings as $meeting) {
+                // If there is any recording.
+                if ($meeting->recording_count > 0) {
+                    // Loop for each Recording file.
+                    foreach ($meeting->recording_files as $recording_file) {
+                        // We are only showing Video (MP4) recording.
+                        if ($recording_file->file_type === 'MP4') {
+
+                            $d = new DateTime($recording_file->recording_start);
+                            $format = "D, d M Y H:i:s O";
+                            $text = $d->format($format);
+
+                            $radiovalue = $meeting->uuid . "#" . $recording_file->id;
+
+                            // Add Radio Button
+                            $mform->addElement('radio', 'recording', null, $text, $radiovalue);
+
+                            // $mform->addElement('radio', 'repeateditall', null, get_string('repeateditthis', 'calendar'), 0);
+
+                            $html = '<iframe width="320" height="240" style="border:0" src="'.$recording_file->play_url.'"></iframe><hr/>';
+                            // Add Zoom IFrame
+                            $mform->addElement('html', $html);
+                        }
+                    }
+                }
+            }
         }
         
-        // var_dump($USER);
-
-        // Call Zoom to get all Zoom Recordings of this user
-
-
-        // if ($this->get_config('maxfilesubmissions') <= 0) {
-        //     return false;
-        // }
-
-        // $fileoptions = $this->get_file_options();
-        // $submissionid = $submission ? $submission->id : 0;
-
-        // $data = file_prepare_standard_filemanager($data,
-        //                                           'files',
-        //                                           $fileoptions,
-        //                                           $this->assignment->get_context(),
-        //                                           'assignsubmission_ncmzoom',
-        //                                           assignsubmission_ncmzoom_FILEAREA,
-        //                                           $submissionid);
-        // $mform->addElement('filemanager', 'files_filemanager', $this->get_name(), null, $fileoptions);
-
+        
         return true;
     }
 
@@ -223,9 +233,25 @@ class assign_submission_ncmzoom extends assign_submission_plugin {
         // $event = \assignsubmission_ncmzoom\event\assessable_uploaded::create($params);
         // $event->set_legacy_files($files);
         // $event->trigger();
+        
+        var_dump($data);
+
+        echo "<pre>data:";
+        var_dump($data);
+        echo "</pre>";
+
+        $selectedrecording = explode('#', $data->recording);
+        $meetinguuid = $selectedrecording[0];
+        $recordingfileid = $selectedrecording[1];
 
         $groupname = null;
         $groupid = 0;
+
+        $params = array(
+            'context' => context_module::instance($this->assignment->get_course_module()->id),
+            'courseid' => $this->assignment->get_course()->id,
+        );
+
         // Get the group name as other fields are not transcribed in the logs and this information is important.
         if (empty($submission->userid) && !empty($submission->groupid)) {
             $groupname = $DB->get_field('groups', 'name', array('id' => $submission->groupid), MUST_EXIST);
@@ -235,19 +261,23 @@ class assign_submission_ncmzoom extends assign_submission_plugin {
         }
 
         // Unset the objectid and other field from params for use in submission events.
-        unset($params['objectid']);
-        unset($params['other']);
+        //unset($params['objectid']);
+        //unset($params['other']);
+        
         $params['other'] = array(
             'submissionid' => $submission->id,
             'submissionattempt' => $submission->attemptnumber,
             'submissionstatus' => $submission->status,
             'groupid' => $groupid,
-            'groupname' => $groupname
+            'groupname' => $groupname,
+            'meetinguuid' => $meetinguuid,
+            'recordingfileid' => $recordingfileid
+
         );
 
         if ($ncmzoomsubmission) {
-            $ncmzoomsubmission->meetinguuid = $data->meetinguuid;
-            $ncmzoomsubmission->recordingfileid = $data->recordingfileid;
+            $ncmzoomsubmission->meetinguuid = $meetinguuid;
+            $ncmzoomsubmission->recordingfileid = $recordingfileid;
             $updatestatus = $DB->update_record('assignsubmission_ncmzoom', $ncmzoomsubmission);
             $params['objectid'] = $ncmzoomsubmission->id;
 
@@ -259,8 +289,8 @@ class assign_submission_ncmzoom extends assign_submission_plugin {
             $ncmzoomsubmission = new stdClass();
             $ncmzoomsubmission->submission = $submission->id;
             $ncmzoomsubmission->assignment = $this->assignment->get_instance()->id;
-            $ncmzoomsubmission->meetinguuid = $data->meetinguuid;
-            $ncmzoomsubmission->recordingfileid = $data->recordingfileid;
+            $ncmzoomsubmission->meetinguuid = $meetinguuid;
+            $ncmzoomsubmission->recordingfileid = $recordingfileid;
             
             $ncmzoomsubmission->id = $DB->insert_record('assignsubmission_ncmzoom', $ncmzoomsubmission);
             $params['objectid'] = $ncmzoomsubmission->id;
@@ -280,16 +310,77 @@ class assign_submission_ncmzoom extends assign_submission_plugin {
      * @return string
      */
     public function view_summary(stdClass $submission, & $showviewlink) {
+
+        global $DB;
         
         // Show we show a link to view all files for this plugin?
-        $showviewlink = $count > assignsubmission_ncmzoom_MAXSUMMARYFILES;
-        if ($count <= assignsubmission_ncmzoom_MAXSUMMARYFILES) {
-            return $this->assignment->render_area_files('assignsubmission_ncmzoom',
-                                                        assignsubmission_ncmzoom_FILEAREA,
-                                                        $submission->id);
-        } else {
-            return get_string('countfiles', 'assignsubmission_ncmzoom', $count);
-        }
+        // $showviewlink = $count > assignsubmission_ncmzoom_MAXSUMMARYFILES;
+        // if ($count <= assignsubmission_ncmzoom_MAXSUMMARYFILES) {
+        //     return $this->assignment->render_area_files('assignsubmission_ncmzoom',
+        //                                                 assignsubmission_ncmzoom_FILEAREA,
+        //                                                 $submission->id);
+        // } else {
+        //     return get_string('countfiles', 'assignsubmission_ncmzoom', $count);
+        // }
+
+        // Never show a link to view full submission.
+        $showviewlink = true;
+
+        // echo "<pre>";
+        // var_dump($submission);
+        // echo "</pre>";
+        $ncmzoomsubmission = $this->get_ncmzoom_submission($submission->id);
+        
+        // echo "<pre>";
+        // var_dump($ncmzoomsubmission);
+        // echo "</pre>";
+        $myrecording = $this->get_zoom_cloud_recording($ncmzoomsubmission);
+
+        // echo "<pre>";
+        // var_dump($myrecording);
+        // echo "</pre>";
+        $sd = new DateTime($myrecording->recording_start);
+        $ed = new DateTime($myrecording->recording_end);
+
+        $interval = $sd->diff($ed);
+        $mydiff = $interval->format("%H:%I:%S");
+
+        // echo "<pre>";
+        // var_dump($interval);
+        // echo "</pre>";
+
+        $format = "D, d M Y H:i:s O";
+        $text = $sd->format($format);
+        $text .= " (" . $mydiff . ")";
+
+        $o = $this->assignment->get_renderer()->container($text . " " , 'ncmzoomcontainer');
+        $o .= "<a href=\"".$myrecording->play_url."\" target=\"_blank\"><i class=\"icon fa fa-external-link\"></a>";
+    //     $o .= '<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ncmzoom">
+    //     Launch Modal
+    //   </button>';
+
+    //     $o .= '<!-- Modal -->
+    //     <div class="modal fade" id="ncmzoom" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    //       <div class="modal-dialog" role="document">
+    //         <div class="modal-content">
+    //           <div class="modal-header">
+    //             <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+    //             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    //               <span aria-hidden="true">&times;</span>
+    //             </button>
+    //           </div>
+    //           <div class="modal-body" style="height:800px;">
+    //             <iframe height="600px" width="600px" style="border:0" src="'.$myrecording->play_url.'"></iframe>
+    //           </div>
+    //           <div class="modal-footer">
+    //             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+    //             <button type="button" class="btn btn-primary">Save changes</button>
+    //           </div>
+    //         </div>
+    //       </div>
+    //     </div>';
+        return $o;
+
     }
 
     /**
@@ -299,17 +390,30 @@ class assign_submission_ncmzoom extends assign_submission_plugin {
      * @return string
      */
     public function view(stdClass $submission) {
-        return $this->assignment->render_area_files('assignsubmission_ncmzoom',
-                                                    assignsubmission_ncmzoom_FILEAREA,
-                                                    $submission->id);
+        // return $this->assignment->render_area_files('assignsubmission_ncmzoom',
+        //                                             assignsubmission_ncmzoom_FILEAREA,
+        //                                             $submission->id);
+
+        $ncmzoomsubmission = $this->get_ncmzoom_submission($submission->id);
+
+        $myrecording = $this->get_zoom_cloud_recording($ncmzoomsubmission);
+
+        // $o = $this->assignment->get_renderer()->container($text . " " , 'ncmzoomcontainer');
+
+        // return $o;
+        $html = "<a href=\"".$myrecording->play_url."\" target=\"_blank\">External Link</a>";
+        $html .= "<iframe src=\"".$myrecording->play_url."\" width='600px' height='380px' style='border:0'></iframe>";
+        return $html;
+                                
     }
 
     /**
-     * Return true if there are no submission files
+     * Return true if there are no meeting uuid and recording file id
      * @param stdClass $submission
      */
     public function is_empty(stdClass $submission) {
-        return true;
+        return false;
+        // TODO: Need to call 
     }
 
     /**
@@ -376,42 +480,34 @@ class assign_submission_ncmzoom extends assign_submission_plugin {
      * @since Moodle 3.2
      */
     public function get_config_for_external() {
-        global $CFG;
-
-        $configs = $this->get_config();
-
-        // Get a size in bytes.
-        if ($configs->maxsubmissionsizebytes == 0) {
-            $configs->maxsubmissionsizebytes = get_max_upload_file_size($CFG->maxbytes, $this->assignment->get_course()->maxbytes,
-                                                                        get_config('assignsubmission_ncmzoom', 'maxbytes'));
-        }
-        return (array) $configs;
+        return (array) $this->get_config();
     }
 
-    public function get_html_meeting($meeting) {
-        $html = '';
-        // show recordings
-        if ($meeting->recording_count > 0) {
-            foreach ($meeting->recording_files as $recording_file) {
-                if ($recording_file->file_type === 'MP4') {
-                    $html .= $this->get_html_recording($meeting, $recording_file);
-                }
+    /**
+     * The submission comments plugin has no submission component so should not be counted
+     * when determining whether to show the edit submission link.
+     * @return boolean
+     */
+    public function allow_submissions() {
+        return true;
+    }
+
+    protected function get_zoom_cloud_recording($ncmzoomsubmission) {
+
+        $service = new assignsubmission_ncmzoom_webservice();
+        $service->get_meeting_cloud_recordings($ncmzoomsubmission->meetinguuid);
+
+        $result = $service->lastresponse;
+        $myrecording = null;
+        // Find the recording file 
+        foreach ($result->recording_files as $recordingfile) {
+            if ($recordingfile->id === $ncmzoomsubmission->recordingfileid) {
+                $myrecording = $recordingfile;
+                break;
             }
-        };
-        return $html;
+        }
+        return $myrecording;
     }
+    
 
-    public function get_html_recording($meeting, $recording) {
-
-        $d = new DateTime($recording->recording_start);
-        $format = "D, d M Y H:i:s O";
-
-        $html = '<div>
-        <input type="radio" name="recording" value="'.$meeting->uuid.'#'.$recording->id.'">
-        <strong>'.$d->format($format).'</strong>
-        <p class="muted">'.$recording->id.' / '.$recording->recording_start.'</p>
-        
-        <iframe width="320" height="240" style="border:0" src="'.$recording->play_url.'"></iframe></div><hr/>';
-        return $html;
-    }
 }

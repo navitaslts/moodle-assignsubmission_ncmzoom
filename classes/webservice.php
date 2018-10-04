@@ -125,7 +125,12 @@ class assignsubmission_ncmzoom_webservice
      */
     public function get_cloud_recordings($zoomuserid) {
 
+        // $today = date("Y-m-d");
+        $from = date("Y-m-d", strtotime("-90 days"));
+        $from = "2018-07-01";
+        //$to = "2018-09-01";
         $url = 'users/'. $zoomuserid .'/recordings';
+        $url .= "?from={$from}";
         // $data['user_info'] = array(
         //     'email' => $user->email,
         //     'type' => 2,
@@ -144,7 +149,23 @@ class assignsubmission_ncmzoom_webservice
                 return false;
             }
         }
+        return true;
+    }
 
+    /** 
+     * 
+     */
+    public function get_meeting_cloud_recordings($meetinguuid) {
+
+        $url = 'meetings/'. $meetinguuid .'/recordings';
+
+        try {
+            $this->make_call($url);
+        } catch (moodle_exception $e) {
+            // If user already exists, it will return "User already in the account".
+            var_dump($e);
+            return false;
+        }
         return true;
     }
 

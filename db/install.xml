@@ -4,13 +4,13 @@
     xsi:noNamespaceSchemaLocation="../../../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="assignsubmission_ncmzoom" COMMENT="Info about file submissions for assignments">
+    <TABLE NAME="assignsubmission_ncmzoom" COMMENT="Info about Zoom Recording submissions for assignments">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="assignment" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="submission" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="meetinguuid" TYPE="string" LENGTH="36" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="The Zoom Meeting UUID."/>
-        <FIELD NAME="recordingfileid" TYPE="string" LENGTH="36" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Recording File ID."/>
+        <FIELD NAME="meetinguuid" TYPE="char" LENGTH="36" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="The Zoom Meeting UUID."/>
+        <FIELD NAME="recordingfileid" TYPE="char" LENGTH="36" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Recording File ID."/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="The unique id for this submission info."/>
@@ -20,4 +20,10 @@
     </TABLE>
   </TABLES>
 </XMLDB>
-edbc8e90-41e0-465f-8af3-54102144e09b 
+
+
+Tristan Chadw
+Marc Loney
+Tom Garner
+
+API Atlas
