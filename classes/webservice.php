@@ -25,7 +25,8 @@
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot.'/mod/assign/submission/ncmzoom/locallib.php');
 // require_once($CFG->dirroot . '/lib/filelib.php');
-require_once($CFG->dirroot.'/mod/ncmzoom/jwt/JWT.php');
+//require_once($CFG->dirroot.'/mod/ncmzoom/jwt/JWT.php');
+require_once($CFG->dirroot.'/mod/assign/submission/ncmzoom/jwt/JWT.php');
 // require_once($CFG->dirroot.'/mod/assign/submission/ncmzoom/classes/aws.php');
 
 class assignsubmission_ncmzoom_webservice
@@ -218,7 +219,7 @@ class assignsubmission_ncmzoom_webservice
         );
 
         $response = null;
-        if ($this->_token = \Firebase\JWT\JWT::encode($token, $this->_apisecret)) {
+        if ($this->_token = \Firebase\JWT2\JWT::encode($token, $this->_apisecret)) {
             if (!empty($method)) {
                 if (strtolower($method) == 'get') {
                     $data['access_token'] = $this->_token;

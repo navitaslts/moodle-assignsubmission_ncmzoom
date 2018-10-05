@@ -326,35 +326,37 @@ class assign_submission_ncmzoom extends assign_submission_plugin {
         // Never show a link to view full submission.
         $showviewlink = false;
 
-        // echo "<pre>";
-        // var_dump($submission);
-        // echo "</pre>";
-        $ncmzoomsubmission = $this->get_ncmzoom_submission($submission->id);
+        echo "<pre>";
+        var_dump($submission);
+        echo "</pre>";
+
         
-        // echo "<pre>";
-        // var_dump($ncmzoomsubmission);
-        // echo "</pre>";
-        $myrecording = $this->get_zoom_cloud_recording($ncmzoomsubmission);
+        $ncmzoomsubmission = $this->get_ncmzoom_submission($submission->id);
+        if ($ncmzoomsubmission) {
+            // echo "<pre>";
+            // var_dump($ncmzoomsubmission);
+            // echo "</pre>";
+            $myrecording = $this->get_zoom_cloud_recording($ncmzoomsubmission);
 
-        // echo "<pre>";
-        // var_dump($myrecording);
-        // echo "</pre>";
-        $sd = new DateTime($myrecording->recording_start);
-        $ed = new DateTime($myrecording->recording_end);
+            // echo "<pre>";
+            // var_dump($myrecording);
+            // echo "</pre>";
+            $sd = new DateTime($myrecording->recording_start);
+            $ed = new DateTime($myrecording->recording_end);
 
-        $interval = $sd->diff($ed);
-        $mydiff = $interval->format("%H:%I:%S");
+            $interval = $sd->diff($ed);
+            $mydiff = $interval->format("%H:%I:%S");
 
-        // echo "<pre>";
-        // var_dump($interval);
-        // echo "</pre>";
+            // echo "<pre>";
+            // var_dump($interval);
+            // echo "</pre>";
 
-        $format = "D, d M Y H:i:s O";
-        $text = $sd->format($format);
-        $text .= " (" . $mydiff . ")";
+            $format = "D, d M Y H:i:s O";
+            $text = $sd->format($format);
+            $text .= " (" . $mydiff . ")";
 
-        $o = $this->assignment->get_renderer()->container($text . " " , 'ncmzoomcontainer');
-        $o .= "<a href=\"".$myrecording->play_url."\" target=\"_blank\"><i class=\"icon fa fa-external-link\"></a>";
+            $o = $this->assignment->get_renderer()->container($text . " " , 'ncmzoomcontainer');
+            $o .= "<a href=\"".$myrecording->play_url."\" target=\"_blank\"><i class=\"icon fa fa-external-link\"></a>";
     //     $o .= '<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ncmzoom">
     //     Launch Modal
     //   </button>';
@@ -380,6 +382,9 @@ class assign_submission_ncmzoom extends assign_submission_plugin {
     //       </div>
     //     </div>';
         return $o;
+        } else {
+            return 'none';
+        }
 
     }
 
