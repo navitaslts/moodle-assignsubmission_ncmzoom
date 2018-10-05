@@ -129,7 +129,7 @@ class assignsubmission_ncmzoom_webservice
         $today = date("Y-m-d");
         $from = date("Y-m-d", strtotime("-30 days"));
         // $from = "2018-07-01";
-        // $to = "2018-09-01";
+        $to = $today;
         $url = 'users/'. $zoomuserid .'/recordings';
         $url .= "?from={$from}&to={$to}";
         // $data['user_info'] = array(
