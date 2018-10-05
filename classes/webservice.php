@@ -126,12 +126,12 @@ class assignsubmission_ncmzoom_webservice
      */
     public function get_cloud_recordings($zoomuserid) {
 
-        // $today = date("Y-m-d");
-        $from = date("Y-m-d", strtotime("-90 days"));
-        $from = "2018-07-01";
-        //$to = "2018-09-01";
+        $today = date("Y-m-d");
+        $from = date("Y-m-d", strtotime("-30 days"));
+        // $from = "2018-07-01";
+        // $to = "2018-09-01";
         $url = 'users/'. $zoomuserid .'/recordings';
-        $url .= "?from={$from}";
+        $url .= "?from={$from}&to={$to}";
         // $data['user_info'] = array(
         //     'email' => $user->email,
         //     'type' => 2,
