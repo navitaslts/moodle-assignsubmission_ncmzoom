@@ -324,7 +324,7 @@ class assign_submission_ncmzoom extends assign_submission_plugin {
         // }
 
         // Never show a link to view full submission.
-        $showviewlink = true;
+        $showviewlink = false;
 
         // echo "<pre>";
         // var_dump($submission);
