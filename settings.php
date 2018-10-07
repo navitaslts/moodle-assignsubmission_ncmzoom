@@ -29,7 +29,3 @@ $settings->add(new admin_setting_configcheckbox('assignsubmission_ncmzoom/defaul
                    new lang_string('default', 'assignsubmission_ncmzoom'),
                    new lang_string('default_help', 'assignsubmission_ncmzoom'), 0));
 
-if ($ADMIN->fulltree) {
-   // TODO: Define the plugin settings page.
-   // https://docs.moodle.org/dev/Admin_settings
-}

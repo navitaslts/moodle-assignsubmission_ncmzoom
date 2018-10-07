@@ -57,7 +57,8 @@ class submission_created extends \mod_assign\event\submission_created {
      */
     public function get_description() {
         $descriptionstring = "The user with id '$this->userid' created a Zoom recording submission " .
-            "'Meeting UUID: {$this->other['recording']}', Recording File ID: {$this->other['recordingfileid']} - in the assignment with course module id " .
+            "'Meeting UUID: {$this->other['recording']}', Recording File ID: {$this->other['recordingfileid']} ".
+            " - in the assignment with course module id " .
             "'$this->contextinstanceid'";
         if (!empty($this->other['groupid'])) {
             $descriptionstring .= " for the group with id '{$this->other['groupid']}'.";

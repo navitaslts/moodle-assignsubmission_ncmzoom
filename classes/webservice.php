@@ -16,7 +16,7 @@
 
 /**
  * Handles API calls to Zoom REST API.
- * 
+ *
  * @package     assignsubmission_ncmzoom
  * @copyright   2018 Nicolas Jourdain <nicolas.jourdain@navitas.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -24,10 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot.'/mod/assign/submission/ncmzoom/locallib.php');
-// require_once($CFG->dirroot . '/lib/filelib.php');
-//require_once($CFG->dirroot.'/mod/ncmzoom/jwt/JWT.php');
 require_once($CFG->dirroot.'/mod/assign/submission/ncmzoom/jwt/JWT.php');
-// require_once($CFG->dirroot.'/mod/assign/submission/ncmzoom/classes/aws.php');
 
 class assignsubmission_ncmzoom_webservice
 {
@@ -120,25 +117,16 @@ class assignsubmission_ncmzoom_webservice
         $this->_version = $this->_get_version($this->_apiurl);
     }
 
-
-    /** 
-     * 
+    /**
+     *
      */
     public function get_cloud_recordings($zoomuserid) {
 
         $today = date("Y-m-d");
         $from = date("Y-m-d", strtotime("-30 days"));
-        // $from = "2018-07-01";
         $to = $today;
         $url = 'users/'. $zoomuserid .'/recordings';
         $url .= "?from={$from}&to={$to}";
-        // $data['user_info'] = array(
-        //     'email' => $user->email,
-        //     'type' => 2,
-        //     'first_name' => $user->firstname,
-        //     'last_name' => $user->lastname,
-        //     'password' => str_shuffle(uniqid())
-        // );
 
         try {
             $this->make_call($url);
@@ -153,8 +141,8 @@ class assignsubmission_ncmzoom_webservice
         return true;
     }
 
-    /** 
-     * 
+    /**
+     *
      */
     public function get_meeting_cloud_recordings($meetinguuid) {
 
@@ -424,7 +412,7 @@ class assignsubmission_ncmzoom_webservice
                     if (!empty($response)) {
                         $this->lastresponse = $response;
                         $this->format_meeting_response($zoom);
-                        // register Zoom Meeting in AWS
+                        // Register Zoom Meeting in AWS.
                         if ($this->_config->awsenable) {
                             $register = array();
                             $register['uuid'] = $this->lastresponse->uuid;
