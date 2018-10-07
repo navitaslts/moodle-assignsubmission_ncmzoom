@@ -158,11 +158,11 @@ class assign_submission_ncmzoom extends assign_submission_plugin {
         $return = new stdClass();
         $result = $service->lastresponse;
 
-        echo "<br/>";
-        echo "<br/>";
-        echo "<br/>";
+        // echo "<br/>";
+        // echo "<br/>";
+        // echo "<br/>";
 
-        var_dump($result);
+        // var_dump($result);
 
         $mform->addElement('html', "<p class='lead'>Select the Zoom Recording you want to submit</p>");
 
@@ -216,29 +216,12 @@ class assign_submission_ncmzoom extends assign_submission_plugin {
         global $USER, $DB;
 
         $ncmzoomsubmission = $this->get_ncmzoom_submission($submission->id);
-
-        // Trigger Event
-        // $params = array(
-        //     'context' => context_module::instance($this->assignment->get_course_module()->id),
-        //     'courseid' => $this->assignment->get_course()->id,
-        //     'objectid' => $submission->id,
-        //     'other' => array(
-        //         'content' => '',
-        //         'pathnamehashes' => array_keys($files)
-        //     )
-        // );
-        // if (!empty($submission->userid) && ($submission->userid != $USER->id)) {
-        //     $params['relateduserid'] = $submission->userid;
-        // }
-        // $event = \assignsubmission_ncmzoom\event\assessable_uploaded::create($params);
-        // $event->set_legacy_files($files);
-        // $event->trigger();
         
-        var_dump($data);
+        // var_dump($data);
 
-        echo "<pre>data:";
-        var_dump($data);
-        echo "</pre>";
+        // echo "<pre>data:";
+        // var_dump($data);
+        // echo "</pre>";
 
         $selectedrecording = explode('#', $data->recording);
         $meetinguuid = $selectedrecording[0];
@@ -326,9 +309,9 @@ class assign_submission_ncmzoom extends assign_submission_plugin {
         // Never show a link to view full submission.
         $showviewlink = false;
 
-        echo "<pre>";
-        var_dump($submission);
-        echo "</pre>";
+        // echo "<pre>";
+        // var_dump($submission);
+        // echo "</pre>";
 
         
         $ncmzoomsubmission = $this->get_ncmzoom_submission($submission->id);
@@ -408,8 +391,7 @@ class assign_submission_ncmzoom extends assign_submission_plugin {
         // return $o;
         $html = "<a href=\"".$myrecording->play_url."\" target=\"_blank\">External Link</a>";
         $html .= "<iframe src=\"".$myrecording->play_url."\" width='600px' height='380px' style='border:0'></iframe>";
-        return $html;
-                                
+        return $html;                           
     }
 
     /**
