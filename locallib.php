@@ -236,7 +236,9 @@ class assign_submission_ncmzoom extends assign_submission_plugin {
             // $interval = $sd->diff($ed);
             // $mydiff = $interval->format("%H:%I:%S");
 
-            $format = "D, d M Y H:i:s O";
+            $format = "D, d M Y H:i:s";
+            $tz = new DateTimeZone($USER->timezone);
+            $sd->setTimezone($tz);
             $text = $sd->format($format);
             // $text .= " (" . $mydiff . ")";
 
