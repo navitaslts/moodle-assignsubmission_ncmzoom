@@ -98,12 +98,14 @@ class assign_submission_ncmzoom extends assign_submission_plugin {
 
         $service = new assignsubmission_ncmzoom_webservice();
         $zoomid = $USER->profile['ncmzoomid'];
+        var_dump($USER);
         $service->get_cloud_recordings($zoomid);
 
         $return = new stdClass();
         $result = $service->lastresponse;
 
-        $mform->addElement('html', "<p class='lead'>Select the Zoom Recording you want to submit</p>");
+        $mform->addElement('html', "<p class='lead'>Select the Zoom Recording you want to submit:</p>");
+        $mform->addElement('html', "<p>Only recordings from the last 30 days are displayed.</p>");
 
         if (empty($result->meetings)) {
             $mform->addElement('html', '<div class="alert alert-warning" role="alert">No meeting found.</div>');
@@ -119,7 +121,9 @@ class assign_submission_ncmzoom extends assign_submission_plugin {
                         if ($recordingfile->file_type === 'MP4') {
 
                             $d = new DateTime($recordingfile->recording_start);
-                            $format = "D, d M Y H:i:s O";
+                            $tz = new DateTimeZone($USER->timezone);
+                            $d->setTimezone($tz);
+                            $format = "D, d M Y H:i:s";
                             $text = $d->format($format);
 
                             $radiovalue = $meeting->uuid . "#" . $recordingfile->id;
@@ -229,15 +233,16 @@ class assign_submission_ncmzoom extends assign_submission_plugin {
             $sd = new DateTime($myrecording->recording_start);
             $ed = new DateTime($myrecording->recording_end);
 
-            $interval = $sd->diff($ed);
-            $mydiff = $interval->format("%H:%I:%S");
+            // $interval = $sd->diff($ed);
+            // $mydiff = $interval->format("%H:%I:%S");
 
             $format = "D, d M Y H:i:s O";
             $text = $sd->format($format);
-            $text .= " (" . $mydiff . ")";
+            // $text .= " (" . $mydiff . ")";
 
-            $o = $this->assignment->get_renderer()->container($text . " " , 'ncmzoomcontainer');
-            $o .= "<a href=\"".$myrecording->play_url."\" target=\"_blank\"><i class=\"icon fa fa-external-link\"></a>";
+            $itemname = $myrecording->other->topic . ' on ' . $text .', Zoom Meeting '. $myrecording->other->meeting_id;
+            $itemname = '<a href="'.$myrecording->play_url.'">'.$itemname.'</a>';
+            $o = $this->assignment->get_renderer()->container($itemname . " " , 'ncmzoomcontainer');
             return $o;
         } else {
             return 'none';
@@ -357,6 +362,8 @@ class assign_submission_ncmzoom extends assign_submission_plugin {
         foreach ($result->recording_files as $recordingfile) {
             if ($recordingfile->id === $ncmzoomsubmission->recordingfileid) {
                 $myrecording = $recordingfile;
+                $myrecording->other->meeting_id = $result->id;
+                $myrecording->other->topic = $result->topic;
                 break;
             }
         }
