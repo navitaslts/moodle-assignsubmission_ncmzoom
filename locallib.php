@@ -98,7 +98,6 @@ class assign_submission_ncmzoom extends assign_submission_plugin {
 
         $service = new assignsubmission_ncmzoom_webservice();
         $zoomid = $USER->profile['ncmzoomid'];
-        var_dump($USER);
         $service->get_cloud_recordings($zoomid);
 
         $return = new stdClass();
