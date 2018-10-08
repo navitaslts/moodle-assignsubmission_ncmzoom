@@ -126,7 +126,7 @@ class assignsubmission_ncmzoom_webservice
         $from = date("Y-m-d", strtotime("-30 days"));
         $to = $today;
         $url = 'users/'. $zoomuserid .'/recordings';
-        $url .= "?from={$from}&to={$to}";
+        $url .= "?from={$from}&to={$to}&pagesize=300";
 
         try {
             $this->make_call($url);

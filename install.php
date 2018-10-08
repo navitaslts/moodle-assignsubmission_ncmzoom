@@ -15,27 +15,30 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plugin upgrade steps are defined here.
+ * Post-install code for the submission_ncmzoom module.
  *
- * @package     assignsubmission_ncmzoom
- * @category    upgrade
- * @copyright   2018 Nicolas Jourdain <nicolas.jourdain@navitas.com>
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+  * @package     assignsubmission_ncmzoom
+  * @category    admin
+  * @copyright   2018 Nicolas Jourdain <nicolas.jourdain@navitas.com>
+  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 defined('MOODLE_INTERNAL') || die();
 
 
 /**
- * Execute assignsubmission_ncmzoom upgrade from the given old version.
- *
- * @param int $oldversion
+ * Code run after the assignsubmission_ncmzoom module database tables have been created.
+ * Moves the plugin to the top of the list (of 3)
  * @return bool
  */
-function xmldb_assignsubmission_ncmzoom_upgrade($oldversion) {
-    global $DB;
+function xmldb_assignsubmission_ncmzoom_install() {
+    global $CFG;
 
-    $dbman = $DB->get_manager();
+    // Set the correct initial order for the plugins.
+    require_once($CFG->dirroot . '/mod/assign/adminlib.php');
+    $pluginmanager = new assign_plugin_manager('assignsubmission');
+
+    $pluginmanager->move_plugin('onlinetext', 'down');
+    $pluginmanager->move_plugin('onlinetext', 'down');
 
     return true;
 }
