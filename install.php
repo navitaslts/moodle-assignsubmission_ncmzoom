@@ -37,8 +37,8 @@ function xmldb_assignsubmission_ncmzoom_install() {
     require_once($CFG->dirroot . '/mod/assign/adminlib.php');
     $pluginmanager = new assign_plugin_manager('assignsubmission');
 
-    $pluginmanager->move_plugin('onlinetext', 'down');
-    $pluginmanager->move_plugin('onlinetext', 'down');
+    $pluginmanager->move_plugin('ncmzoom', 'down');
+    $pluginmanager->move_plugin('ncmzoom', 'down');
 
     return true;
 }
