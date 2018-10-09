@@ -39,6 +39,7 @@ function xmldb_assignsubmission_ncmzoom_install() {
     $pluginmanager->move_plugin('ncmzoom', 'down');
     $pluginmanager->move_plugin('ncmzoom', 'down');
     $pluginmanager->move_plugin('ncmzoom', 'down');
+    $pluginmanager->move_plugin('ncmzoom', 'down');
 
     return true;
 }
