@@ -33,9 +33,17 @@ defined('MOODLE_INTERNAL') || die();
  * @return bool
  */
 function xmldb_assignsubmission_ncmzoom_upgrade($oldversion) {
-    global $DB;
+    global $DB, $CFG;
 
     $dbman = $DB->get_manager();
+    // Set the correct initial order for the plugins.
+    require_once($CFG->dirroot . '/mod/assign/adminlib.php');
+    $pluginmanager = new assign_plugin_manager('assignsubmission');
+
+    // $pluginmanager->move_plugin('ncmzoom', 'down');
+    // $pluginmanager->move_plugin('ncmzoom', 'down');
+    // $pluginmanager->move_plugin('ncmzoom', 'down');
+    // $pluginmanager->move_plugin('ncmzoom', 'down');
 
     return true;
 }
