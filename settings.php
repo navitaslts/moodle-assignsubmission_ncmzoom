@@ -25,7 +25,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$settings->add(new admin_setting_configcheckbox('assignsubmission_ncmzoom/default',
-                   new lang_string('default', 'assignsubmission_ncmzoom'),
-                   new lang_string('default_help', 'assignsubmission_ncmzoom'), 0));
+if ($ADMIN->fulltree) {
 
+    $settings->add(new admin_setting_configcheckbox('assignsubmission_ncmzoom/default',
+                    new lang_string('default', 'assignsubmission_ncmzoom'),
+                    new lang_string('default_help', 'assignsubmission_ncmzoom'), 0));
+}

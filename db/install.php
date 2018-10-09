@@ -15,18 +15,19 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Post-install code for the submission_onlinetext module.
+ * Post-install code for the assignsubmission_ncmzoom module.
  *
- * @package assignsubmission_onlinetext
- * @copyright 2012 NetSpot {@link http://www.netspot.com.au}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     assignsubmission_ncmzoom
+ * @category    upgrade
+ * @copyright   2018 Nicolas Jourdain <nicolas.jourdain@navitas.com>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die();
 
 
 /**
- * Code run after the assignsubmission_onlinetext module database tables have been created.
- * Moves the plugin to the top of the list (of 3)
+ * Code run after the assignsubmission_ncmzoom module database tables have been created.
+ * Moves the plugin to the bottom of the list (of 4)
  * @return bool
  */
 function xmldb_assignsubmission_ncmzoom_install() {

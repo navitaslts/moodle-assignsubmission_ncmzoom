@@ -31,5 +31,7 @@ $string['default'] = 'Enabled by default';
 $string['default_help'] = 'If set, this submission method will be enabled by default for all new assignments.';
 $string['enabled'] = 'Zoom recording submissions';
 $string['enabled_help'] = 'If enabled, students are able to submit Zoom recording.';
+$string['allowedusers'] = 'Allow users';
+$string['allowedusers_help'] = 'List of users\' email addresses separated by comma.';
 
 $string['zoomrecforlog'] = 'The Zoom Recoring has been submitted';

@@ -40,10 +40,5 @@ function xmldb_assignsubmission_ncmzoom_upgrade($oldversion) {
     require_once($CFG->dirroot . '/mod/assign/adminlib.php');
     $pluginmanager = new assign_plugin_manager('assignsubmission');
 
-    // $pluginmanager->move_plugin('ncmzoom', 'down');
-    // $pluginmanager->move_plugin('ncmzoom', 'down');
-    // $pluginmanager->move_plugin('ncmzoom', 'down');
-    // $pluginmanager->move_plugin('ncmzoom', 'down');
-
     return true;
 }

@@ -58,7 +58,6 @@ class assign_submission_ncmzoom extends assign_submission_plugin {
      */
     public function get_settings(MoodleQuickForm $mform) {
         global $CFG, $COURSE;
-
     }
 
     /**
@@ -94,6 +93,8 @@ class assign_submission_ncmzoom extends assign_submission_plugin {
     public function get_form_elements($submission, MoodleQuickForm $mform, stdClass $data) {
         global $OUTPUT, $USER, $CFG;
 
+        var_dump($USER);
+
         $config = get_config('mod_ncmzoom');
 
         $service = new assignsubmission_ncmzoom_webservice();
@@ -120,7 +121,10 @@ class assign_submission_ncmzoom extends assign_submission_plugin {
                         if ($recordingfile->file_type === 'MP4') {
 
                             $d = new DateTime($recordingfile->recording_start);
-                            $tz = new DateTimeZone($USER->timezone);
+                            $tz = new DateTimeZone($CFG->timezone);
+                            if ($USER->timezone) {
+                                $tz = new DateTimeZone($USER->timezone);
+                            }
                             $d->setTimezone($tz);
                             $format = "D, d M Y H:i:s";
                             $text = $d->format($format);

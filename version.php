@@ -26,6 +26,6 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'assignsubmission_ncmzoom';
 $plugin->release = '0.1.0';
-$plugin->version = 2018100801;
+$plugin->version = 2018100902;
 $plugin->requires = 2015111600;
 $plugin->maturity = MATURITY_ALPHA;
