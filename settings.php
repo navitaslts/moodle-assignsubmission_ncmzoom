@@ -30,4 +30,8 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configcheckbox('assignsubmission_ncmzoom/default',
                     new lang_string('default', 'assignsubmission_ncmzoom'),
                     new lang_string('default_help', 'assignsubmission_ncmzoom'), 0));
+
+    $settings->add(new admin_setting_configtextarea('assignsubmission_ncmzoom/allowedusers',
+                    new lang_string('allowedusers', 'assignsubmission_ncmzoom'),
+                    new lang_string('allowedusers_help', 'assignsubmission_ncmzoom'), ''));
 }

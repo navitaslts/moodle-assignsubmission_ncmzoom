@@ -67,19 +67,17 @@ class assign_submission_ncmzoom extends assign_submission_plugin {
      * @return bool
      */
     public function save_settings(stdClass $data) {
+        global $USER;
 
-        // TODO: Based on the user list return false if the user is not in the list;
+        $pluginconfig = get_config('assignsubmission_ncmzoom');
 
-        // $this->set_config('maxfilesubmissions', $data->assignsubmission_ncmzoom_maxfiles);
-        // $this->set_config('maxsubmissionsizebytes', $data->assignsubmission_ncmzoom_maxsizebytes);
-
-        // if (!empty($data->assignsubmission_ncmzoom_filetypes)) {
-        //     $this->set_config('filetypeslist', $data->assignsubmission_ncmzoom_filetypes);
-        // } else {
-        //     $this->set_config('filetypeslist', '');
-        // }
-
-        return true;
+        $allowedusers = explode(',', $pluginconfig->allowedusers);
+        
+        if (in_array($USER->email, $allowedusers)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -92,8 +90,6 @@ class assign_submission_ncmzoom extends assign_submission_plugin {
      */
     public function get_form_elements($submission, MoodleQuickForm $mform, stdClass $data) {
         global $OUTPUT, $USER, $CFG;
-
-        var_dump($USER);
 
         $config = get_config('mod_ncmzoom');
 
