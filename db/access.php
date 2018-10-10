@@ -15,25 +15,21 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plugin strings are defined here.
+ * Capability definitions for this module.
  *
  * @package     assignsubmission_ncmzoom
- * @category    string
+ * @category    upgrade
  * @copyright   2018 Nicolas Jourdain <nicolas.jourdain@navitas.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
-$string['pluginname'] = 'Zoom Recording Submission';
-
-$string['default'] = 'Enabled by default';
-$string['default_help'] = 'If set, this submission method will be enabled by default for all new assignments.';
-$string['enabled'] = 'Zoom recording submissions';
-$string['enabled_help'] = 'If enabled, students are able to submit Zoom recording.';
-$string['allowedusers'] = 'Allowed users';
-$string['allowedusers_help'] = 'List of users\' email addresses separated by comma.';
-
-$string['zoomrecforlog'] = 'The Zoom Recoring has been submitted';
-
-$string['ncmzoom:use'] = 'Can the user create assignments with the NCM Zoom Recording submission plugin.';
+$capabilities = array(
+    'assignsubmission/ncmzoom:use' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+        // 'archetypes' => array(
+        //     'editingteacher' => CAP_ALLOW,
+        //     'manager' => CAP_ALLOW
+        // ),
+    ),
+);

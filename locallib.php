@@ -31,6 +31,25 @@ require_once($CFG->libdir.'/eventslib.php');
 
 class assign_submission_ncmzoom extends assign_submission_plugin {
 
+    /** 
+     * Check if the plugin is enable
+     */
+    public function is_enabled() {
+        return $this->get_config('enabled') && $this->is_configurable();
+    }
+
+    public function is_configurable() {
+        $context = context_course::instance($this->assignment->get_course()->id);
+        if ($this->get_config('enabled')) {
+            return true;
+        }
+        if (!has_capability('assignsubmission/ncmzoom:use', $context)) {
+            //return false;
+            return true;
+        }
+        return parent::is_configurable();
+    }
+
     /**
      * Get the name of the zoom recording submission plugin
      * @return string
@@ -67,17 +86,19 @@ class assign_submission_ncmzoom extends assign_submission_plugin {
      * @return bool
      */
     public function save_settings(stdClass $data) {
-        global $USER;
+        // global $USER;
 
-        $pluginconfig = get_config('assignsubmission_ncmzoom');
+        // $pluginconfig = get_config('assignsubmission_ncmzoom');
 
-        $allowedusers = explode(',', $pluginconfig->allowedusers);
+        // $allowedusers = explode(',', $pluginconfig->allowedusers);
         
-        if (in_array($USER->email, $allowedusers)) {
-            return true;
-        } else {
-            return false;
-        }
+        // if (in_array($USER->email, $allowedusers)) {
+        //     return true;
+        // } else {
+        //     return false;
+        // }
+
+        return true;
     }
 
     /**
@@ -117,8 +138,8 @@ class assign_submission_ncmzoom extends assign_submission_plugin {
                         if ($recordingfile->file_type === 'MP4') {
 
                             $d = new DateTime($recordingfile->recording_start);
-                            $tz = new DateTimeZone($CFG->timezone);
-                            if ($USER->timezone) {
+                            $tz = new DateTimeZone('Australia/Sydney');
+                            if ($USER->timezone && $USER->timezone !== '99') {
                                 $tz = new DateTimeZone($USER->timezone);
                             }
                             $d->setTimezone($tz);
@@ -220,7 +241,7 @@ class assign_submission_ncmzoom extends assign_submission_plugin {
      */
     public function view_summary(stdClass $submission, & $showviewlink) {
 
-        global $DB;
+        global $DB, $USER;
 
         // Never show a link to view full submission.
         $showviewlink = false;
@@ -236,13 +257,16 @@ class assign_submission_ncmzoom extends assign_submission_plugin {
             // $mydiff = $interval->format("%H:%I:%S");
 
             $format = "D, d M Y H:i:s";
-            $tz = new DateTimeZone($USER->timezone);
+            $tz = new DateTimeZone('Australia/Sydney');
+            if ($USER->timezone && $USER->timezone !== '99') {
+                $tz = new DateTimeZone($USER->timezone);
+            }
             $sd->setTimezone($tz);
             $text = $sd->format($format);
             // $text .= " (" . $mydiff . ")";
 
             $itemname = $myrecording->other->topic . ' on ' . $text .', Zoom Meeting '. $myrecording->other->meeting_id;
-            $itemname = '<a href="'.$myrecording->play_url.'">'.$itemname.'</a>';
+            $itemname = '<a href="'.$myrecording->play_url.'" target="_blank">'.$itemname.'</a>';
             $o = $this->assignment->get_renderer()->container($itemname . " " , 'ncmzoomcontainer');
             return $o;
         } else {
@@ -350,6 +374,19 @@ class assign_submission_ncmzoom extends assign_submission_plugin {
      */
     public function allow_submissions() {
         return true;
+    }
+
+        /**
+     * Determine if a submission is empty
+     *
+     * This is distinct from is_empty in that it is intended to be used to
+     * determine if a submission made before saving is empty.
+     *
+     * @param stdClass $data The submission data
+     * @return bool
+     */
+    public function submission_is_empty(stdClass $data) {
+        return false;
     }
 
     protected function get_zoom_cloud_recording($ncmzoomsubmission) {
