@@ -31,7 +31,7 @@ require_once($CFG->libdir.'/eventslib.php');
 
 class assign_submission_ncmzoom extends assign_submission_plugin {
 
-    /** 
+    /**
      * Check if the plugin is enable
      */
     public function is_enabled() {
@@ -44,8 +44,7 @@ class assign_submission_ncmzoom extends assign_submission_plugin {
             return true;
         }
         if (!has_capability('assignsubmission/ncmzoom:use', $context)) {
-            //return false;
-            return true;
+            return false;
         }
         return parent::is_configurable();
     }
@@ -86,18 +85,6 @@ class assign_submission_ncmzoom extends assign_submission_plugin {
      * @return bool
      */
     public function save_settings(stdClass $data) {
-        // global $USER;
-
-        // $pluginconfig = get_config('assignsubmission_ncmzoom');
-
-        // $allowedusers = explode(',', $pluginconfig->allowedusers);
-        
-        // if (in_array($USER->email, $allowedusers)) {
-        //     return true;
-        // } else {
-        //     return false;
-        // }
-
         return true;
     }
 
@@ -253,9 +240,6 @@ class assign_submission_ncmzoom extends assign_submission_plugin {
             $sd = new DateTime($myrecording->recording_start);
             $ed = new DateTime($myrecording->recording_end);
 
-            // $interval = $sd->diff($ed);
-            // $mydiff = $interval->format("%H:%I:%S");
-
             $format = "D, d M Y H:i:s";
             $tz = new DateTimeZone('Australia/Sydney');
             if ($USER->timezone && $USER->timezone !== '99') {
@@ -263,7 +247,6 @@ class assign_submission_ncmzoom extends assign_submission_plugin {
             }
             $sd->setTimezone($tz);
             $text = $sd->format($format);
-            // $text .= " (" . $mydiff . ")";
 
             $itemname = $myrecording->other->topic . ' on ' . $text .', Zoom Meeting '. $myrecording->other->meeting_id;
             $itemname = '<a href="'.$myrecording->play_url.'" target="_blank">'.$itemname.'</a>';
@@ -376,7 +359,7 @@ class assign_submission_ncmzoom extends assign_submission_plugin {
         return true;
     }
 
-        /**
+    /**
      * Determine if a submission is empty
      *
      * This is distinct from is_empty in that it is intended to be used to
