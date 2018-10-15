@@ -33,6 +33,13 @@ $string['enabled'] = 'Zoom recording submissions';
 $string['enabled_help'] = 'If enabled, students are able to submit Zoom recording.';
 $string['allowedusers'] = 'Allowed users';
 $string['allowedusers_help'] = 'List of users\' email addresses separated by comma.';
+$string['apikey'] = 'Zoom API key';
+$string['apikey_desc'] = '';
+$string['apisecret'] = 'Zoom API secret';
+$string['apisecret_desc'] = '';
+$string['apiurl'] = 'Zoom API url';
+$string['apiurl_desc'] = '';
+$string['errorwebservice'] = 'Zoom webservice error: {$a}.';
 
 $string['zoomrecforlog'] = 'The Zoom Recoring has been submitted';
 

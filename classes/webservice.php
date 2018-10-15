@@ -109,8 +109,8 @@ class assignsubmission_ncmzoom_webservice
     protected $_limitfrom = 5;
 
     public function __construct() {
-        $this->_config = get_config('mod_ncmzoom');
-        $this->_apiurl = 'https://api.zoom.us/v2/';
+        $this->_config = get_config('assignsubmission_ncmzoom');
+        $this->_apiurl = (isset($this->_config->apiurl) && ! empty($this->_config->apiurl)) ? $this->_config->apiurl : '';
         $this->_apikey = (isset($this->_config->apikey) && ! empty($this->_config->apikey)) ? $this->_config->apikey : '';
         $this->_apisecret = (isset($this->_config->apisecret) &&
             ! empty($this->_config->apisecret)) ? $this->_config->apisecret : '';
@@ -226,7 +226,7 @@ class assignsubmission_ncmzoom_webservice
         if ($curl->get_errno()) {
             // Curl error.
             $this->lasterror = $curl->error;
-            throw new moodle_exception('errorwebservice', 'mod_ncmzoom', '', $curl->error);
+            throw new moodle_exception('errorwebservice', 'assignsubmission_ncmzoom', '', $curl->error);
         }
         $response = json_decode($response);
         if (isset($response->code) && $response->code != 200) {
