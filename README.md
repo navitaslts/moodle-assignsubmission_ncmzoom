@@ -1,4 +1,5 @@
-# Zoom Recording Submission #
+# Zoom Recording Submission # 
+[![Build Status](https://travis-ci.com/navitaslts/moodle-assignsubmission_ncmzoom.svg?branch=master)](https://travis-ci.com/navitaslts/moodle-assignsubmission_ncmzoom)
 
 TODO Describe the plugin shortly here.
 
