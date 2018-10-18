@@ -31,16 +31,18 @@ if ($ADMIN->fulltree) {
                     new lang_string('default', 'assignsubmission_ncmzoom'),
                     new lang_string('default_help', 'assignsubmission_ncmzoom'), 0));
 
-
-    $apiurl = new admin_setting_configtext('assignsubmission_ncmzoom/apiurl', get_string('apiurl', 'assignsubmission_ncmzoom'),
+    $apiurl = new admin_setting_configtext('assignsubmission_ncmzoom/apiurl',
+        get_string('apiurl', 'assignsubmission_ncmzoom'),
         get_string('apiurl_desc', 'assignsubmission_ncmzoom'), 'https://api.zoom.us/v2/', PARAM_URL);
-        $settings->add($apiurl);
+    $settings->add($apiurl);
 
-    $apikey = new admin_setting_configtext('assignsubmission_ncmzoom/apikey', get_string('apikey', 'assignsubmission_ncmzoom'),
+    $apikey = new admin_setting_configtext('assignsubmission_ncmzoom/apikey',
+        get_string('apikey', 'assignsubmission_ncmzoom'),
         get_string('apikey_desc', 'assignsubmission_ncmzoom'), '', PARAM_ALPHANUMEXT);
-        $settings->add($apikey);
+    $settings->add($apikey);
 
-    $apisecret = new admin_setting_configtext('assignsubmission_ncmzoom/apisecret', get_string('apisecret', 'assignsubmission_ncmzoom'),
+    $apisecret = new admin_setting_configtext('assignsubmission_ncmzoom/apisecret',
+        get_string('apisecret', 'assignsubmission_ncmzoom'),
         get_string('apisecret_desc', 'assignsubmission_ncmzoom'), '', PARAM_ALPHANUMEXT);
-        $settings->add($apisecret);
+    $settings->add($apisecret);
 }

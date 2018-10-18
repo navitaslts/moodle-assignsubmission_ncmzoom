@@ -28,10 +28,6 @@ defined('MOODLE_INTERNAL') || die();
 $capabilities = array(
     'assignsubmission/ncmzoom:use' => array(
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
-        // 'archetypes' => array(
-        //     'editingteacher' => CAP_ALLOW,
-        //     'manager' => CAP_ALLOW
-        // ),
+        'contextlevel' => CONTEXT_COURSE
     ),
 );
